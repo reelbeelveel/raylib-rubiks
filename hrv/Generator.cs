@@ -10,6 +10,7 @@ namespace hrv.Generator {
     class HRVGenerator {
         public HRVGenerator(uint? seed = null) {
             this.seed = seed ?? (uint)DateTime.Now.Ticks;
+            Console.WriteLine("Seed: " + this.seed);
             this.state = this.seed;
         }
         protected virtual uint InternalGenerate(uint range) {
@@ -37,6 +38,6 @@ namespace hrv.Generator {
             return new Color(GenByte(range), GenByte(range), GenByte(range), (byte)opacity);
         }
         public uint seed;
-        private uint state;
+        protected uint state;
     }
 }

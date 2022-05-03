@@ -25,19 +25,23 @@ namespace HelloWorld
             Console.WriteLine(pos.X + " " + pos.Y);
             while (!Raylib.WindowShouldClose())
             {
-                if(HRVKeybinds.Control_W())
+                if(HRVKeybinds.CloseKey())
                 {
                     Raylib.CloseWindow();
+                }
+                if(HRVKeybinds.ScreenShotKey())
+                {
+                    Raylib.TakeScreenshot("screenshot.png");
                 }
                 if(IsKeyPressed(KeyboardKey.KEY_SPACE))
                 {
                     bg = lcg.GenColor();
                 }
-                if(IsKeyPressed(KeyboardKey.KEY_KP_ADD) || IsKeyPressed(KeyboardKey.KEY_EQUAL))
+                if(IsKeyDown(KeyboardKey.KEY_KP_ADD) || IsKeyDown(KeyboardKey.KEY_EQUAL))
                 {
                     size++;
                 }
-                if(IsKeyPressed(KeyboardKey.KEY_KP_SUBTRACT) || IsKeyPressed(KeyboardKey.KEY_MINUS))
+                if(IsKeyDown(KeyboardKey.KEY_KP_SUBTRACT) || IsKeyDown(KeyboardKey.KEY_MINUS))
                 {
                     size--;
                     if(size < 1)

@@ -49,8 +49,25 @@ namespace HelloWorld
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(bg);
 
-                Raylib.DrawText($"Hello, {string.Join("\n", new ShellProcess("whoami").getLines().ToArray())}", (int)pos.X, (int)pos.Y, (size), Color.GREEN);
-                Raylib.DrawText($"{lcg.Generate(10)}", (int)pos.X, (int)pos.Y+(size), size, lcg.GenColor());
+                Raylib.DrawRectangle(
+                        (int)(pos.X - (0.5*size)),
+                        (int)(pos.Y - (0.5*size)),
+                        (int)(size * 10),
+                        (int)(size * 4.5), Color.BLACK);
+
+                Raylib.DrawText(
+                        $"Hello, {string.Join("\n", new ShellProcess("whoami").getLines().ToArray())}",
+                        (int)pos.X,
+                        (int)pos.Y,
+                        (int)size, Color.GREEN);
+
+                Raylib.DrawText(
+                        $"{lcg.Generate(10)}",
+                        (int)pos.X,
+                        (int)pos.Y+(size),
+                        (int)size,
+                        lcg.GenColor());
+
                 Raylib.DrawFPS((int)pos.X, (int)pos.Y+(2*size));
 
                 Raylib.EndDrawing();

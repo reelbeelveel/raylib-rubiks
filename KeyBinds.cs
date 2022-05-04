@@ -12,6 +12,12 @@ namespace hrv.Keybinds {
         public static bool ScreenShotKey() {
             return Control_Mod(KEY_S);
         }
+        public static bool HelpKey() {
+            return Shift_Mod(KEY_SLASH);
+        }
+        public static bool FullScreenKey() {
+            return IsKeyPressed(KEY_F11);
+        }
         public static bool Control_Mod(KeyboardKey key) {
             return IsKeyPressed(key) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
         }

@@ -3,6 +3,7 @@ using static Raylib_cs.Raylib;
 using hrv.ShellWrapper;
 using hrv.Keybinds;
 using hrv.Generator;
+using hrv.HelpModule;
 using System;
 using System.Numerics;
 
@@ -22,58 +23,50 @@ namespace HelloWorld
 
             Vector2 pos = new Vector2(12, 12);
             int size = 20;
-            Console.WriteLine(pos.X + " " + pos.Y);
             while (!Raylib.WindowShouldClose())
             {
                 if(HRVKeybinds.CloseKey())
                 {
                     Raylib.CloseWindow();
                 }
-                if(HRVKeybinds.ScreenShotKey())
-                {
-                    Raylib.TakeScreenshot("screenshot.png");
-                }
-                if(IsKeyPressed(KeyboardKey.KEY_SPACE))
-                {
-                    bg = lcg.GenColor();
-                }
-                if(IsKeyDown(KeyboardKey.KEY_KP_ADD) || IsKeyDown(KeyboardKey.KEY_EQUAL))
-                {
-                    size++;
-                }
-                if(IsKeyDown(KeyboardKey.KEY_KP_SUBTRACT) || IsKeyDown(KeyboardKey.KEY_MINUS))
-                {
-                    size--;
-                    if(size < 1)
-                    {
-                        size = 1;
-                    }
-                }
-                pos = pos + HRVKeybinds.InputVector();
+
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(bg);
 
-                Raylib.DrawRectangle(
-                        (int)(pos.X - (0.5*size)),
-                        (int)(pos.Y - (0.5*size)),
-                        (int)(size * 10),
-                        (int)(size * 4.5), Color.BLACK);
+                if(HRVKeybinds.ScreenShotKey())
+                {
+                    // TODO Screenshot module
+                }
+                if(HRVKeybinds.FullScreenKey())
+                {
+                    Raylib.ToggleFullscreen();
+                }
+                if(HRVKeybinds.HelpKey()) {
+                    hrv.HelpModule.HelpModule.ToggleHelp();
+                }
+                if(hrv.HelpModule.HelpModule.HelpActive) {
+                    Raylib.DrawText("HELP SCREEN COCK AND BALLS", 10, 10, 20, Color.WHITE);
+                } else {
+                    if(IsKeyPressed(KeyboardKey.KEY_SPACE))
+                    {
+                        bg = lcg.GenColor();
+                    }
+                    if(IsKeyDown(KeyboardKey.KEY_KP_ADD) || IsKeyDown(KeyboardKey.KEY_EQUAL))
+                    {
+                        size++;
+                    }
+                    if(IsKeyDown(KeyboardKey.KEY_KP_SUBTRACT) || IsKeyDown(KeyboardKey.KEY_MINUS))
+                    {
+                        size--;
+                        if(size < 1)
+                        {
+                            size = 1;
+                        }
+                    }
+                    pos = pos + HRVKeybinds.InputVector();
 
-                Raylib.DrawText(
-                        $"Hello, {string.Join("\n", new ShellProcess("whoami").getLines().ToArray())}",
-                        (int)pos.X,
-                        (int)pos.Y,
-                        (int)size, Color.GREEN);
-
-                Raylib.DrawText(
-                        $"{lcg.Generate(10)}",
-                        (int)pos.X,
-                        (int)pos.Y+(size),
-                        (int)size,
-                        lcg.GenColor());
-
-                Raylib.DrawFPS((int)pos.X, (int)pos.Y+(2*size));
-
+                    Raylib.DrawText("COCK AND BALLS", (int)pos.X, (int)pos.Y, size, Color.WHITE);
+                }
                 Raylib.EndDrawing();
             }
 

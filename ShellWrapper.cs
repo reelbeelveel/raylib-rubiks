@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace hrv.ShellWrapper {
+namespace hrv {
 
     class ShellException : Exception {
         public ShellException(string message) : base(message) { }
@@ -44,15 +44,19 @@ namespace hrv.ShellWrapper {
             }
             set {
                 if (value && !IsFinished) {
-                    kill();
+                    _kill();
                     state = ShellProcessState.Finished;
                 } else if(!value && IsFinished) {
                     throw new ShellException("Process is already finished");
                 }
             }
         }
+        
+        public void Kill(){
+            IsFinished = true;
+        }
 
-        public string? getLine() {
+        public string? GetLine() {
             if(state == ShellProcessState.Finished) {
                 return null;
             }
@@ -73,30 +77,30 @@ namespace hrv.ShellWrapper {
         }
 
         public void _continue() {
-            getLines();
+            GetLines();
         }
 
         public void _run() {
             start();
-            getLines();
+            GetLines();
         }
 
-        public List<string> getLines() {
+        public List<string> GetLines() {
             List<string> lines = new List<string>();
             string? line;
-            while((line = getLine()) != null) {
+            while((line = GetLine()) != null) {
                 lines.Add(line);
             }
             return lines;
         }
 
-        public void restart() {
+        public void Restart() {
             if(state != ShellProcessState.Idle)
-                proc.Kill();
+                _kill();
             start();
         }
 
-        private void kill() {
+        private void _kill() {
             if(state == ShellProcessState.Idle) {
                 throw new ShellException("Process is not running");
             }
@@ -140,6 +144,14 @@ namespace hrv.ShellWrapper {
                 } else {
                     _redirect = $"/tmp/{value}";
                 }
+            }
+        }
+
+        public ~ShellProcess() {
+            try {
+                _kill();
+            } catch(ShellException e) {
+                // ignore
             }
         }
 

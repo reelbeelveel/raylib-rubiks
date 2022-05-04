@@ -1,13 +1,16 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using hrv.ShellWrapper;
-using hrv.Keybinds;
+
 using hrv.Generator;
-using hrv.HelpModule;
+
+using static hrv.HelpModule;
+using static hrv.Keybinds;
+using static hrv.ScreenShot;
+
 using System;
 using System.Numerics;
 
-namespace HelloWorld
+namespace hrv
 {
     static class Program
     {
@@ -25,7 +28,7 @@ namespace HelloWorld
             int size = 20;
             while (!Raylib.WindowShouldClose())
             {
-                if(HRVKeybinds.CloseKey())
+                if(Keybinds.CloseKey())
                 {
                     Raylib.CloseWindow();
                 }
@@ -33,18 +36,18 @@ namespace HelloWorld
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(bg);
 
-                if(HRVKeybinds.ScreenShotKey())
+                if(Keybinds.ScreenShotKey())
                 {
-                    // TODO Screenshot module
+                    ScreenShot.Capture();
                 }
-                if(HRVKeybinds.FullScreenKey())
+                if(Keybinds.FullScreenKey())
                 {
                     Raylib.ToggleFullscreen();
                 }
-                if(HRVKeybinds.HelpKey()) {
-                    hrv.HelpModule.HelpModule.ToggleHelp();
+                if(Keybinds.HelpKey()) {
+                    HelpModule.ToggleHelp();
                 }
-                if(hrv.HelpModule.HelpModule.HelpActive) {
+                if(hrv.HelpModule.HelpActive) {
                     Raylib.DrawText("HELP SCREEN COCK AND BALLS", 10, 10, 20, Color.WHITE);
                 } else {
                     if(IsKeyPressed(KeyboardKey.KEY_SPACE))
@@ -63,7 +66,7 @@ namespace HelloWorld
                             size = 1;
                         }
                     }
-                    pos = pos + HRVKeybinds.InputVector();
+                    pos = pos + Keybinds.InputVector();
 
                     Raylib.DrawText("COCK AND BALLS", (int)pos.X, (int)pos.Y, size, Color.WHITE);
                 }

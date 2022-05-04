@@ -4,8 +4,8 @@ using System.Numerics;
 using static Raylib_cs.Raylib;
 using static Raylib_cs.KeyboardKey;
 
-namespace hrv.Keybinds {
-    public static class HRVKeybinds {
+namespace hrv{
+    public static class Keybinds {
         public static bool CloseKey() {
             return Control_Mod(KEY_W);
         }

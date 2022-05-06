@@ -4,7 +4,7 @@ using System.Numerics;
 using static Raylib_cs.Raylib;
 using static Raylib_cs.KeyboardKey;
 
-namespace hrv{
+namespace rbx{
     public static class Keybinds {
         public static bool CloseKey() {
             return Control_Mod(KEY_W);

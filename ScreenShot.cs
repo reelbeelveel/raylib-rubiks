@@ -1,7 +1,7 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 
-namespace hrv {
+namespace rbx {
     public static class ScreenShot {
         public static string Capture() {
             // TODO save somewhere useful

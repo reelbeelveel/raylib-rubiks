@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace hrv {
+namespace rbx {
 
     class ShellException : Exception {
         public ShellException(string message) : base(message) { }
@@ -147,7 +147,7 @@ namespace hrv {
             }
         }
 
-        public ~ShellProcess() {
+        ~ShellProcess() {
             try {
                 _kill();
             } catch(ShellException e) {

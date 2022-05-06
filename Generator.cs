@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 
-namespace hrv.Generator {
+namespace rbx.Generator {
     class GeneratorRangeException : Exception {
         public GeneratorRangeException(string message) : base(message) { }
     }

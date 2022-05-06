@@ -1,8 +1,8 @@
 using Raylib_cs;
-using hrv.Generator;
+using rbx.Generator;
 using System;
 using System.Collections.Specialized;
-namespace hrv.Generator {
+namespace rbx.Generator {
     class LCG : HRVGenerator {
         public LCG(uint? seed = null) : base(seed) {}
         protected override uint InternalGenerate(uint range) {

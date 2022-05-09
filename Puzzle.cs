@@ -163,6 +163,14 @@ namespace rbx {
                     Top.ISide(Id, Lft.ISide(Id, Bot.ISide(Id, Rgt.ISide(Id, Top.ISide(Id)))));
                 }
             }
+            public void MMove(bool prime = false) {
+            }
+            
+            public void EMove(bool prime = false) {
+            }
+
+            public void SMove(bool prime = false) {
+            }
 
             protected uint[] ISide(uint id, uint[] assign = null) {
                 uint[] row = new uint[Size];
@@ -177,17 +185,17 @@ namespace rbx {
 
                 if(i == null) {
                     for(i = 0; i < Size; i++) {
-                        uint k = (j) ? Size - i - 1 : i;
-                        row[i] = Tiles[k, j];
+                        uint k = (j > 0) ? Size - (uint)i - 1 : (uint)i;
+                        row[(uint)i] = Tiles[k, (uint)j];
                         if(assign != null)
-                            Tiles[k, j] = assign[i];
+                            Tiles[k, (uint)j] = assign[(uint)i];
                     }
                 } else {
                     for(j = 0; j < Size; j++) {
-                        uint k = (i) ? Size - j - 1 : j;
-                        row[j] = Tiles[i, k];
+                        uint k = (i > 0) ? Size - (uint)j - 1 : (uint)j;
+                        row[(uint)j] = Tiles[(uint)i, k];
                         if(assign != null)
-                            Tiles[i, k] = assign[j];
+                            Tiles[(uint)i, k] = (uint)assign[(uint)j];
                     }
                 }
                 return row;

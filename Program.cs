@@ -25,6 +25,8 @@ namespace rbx
             Raylib.SetExitKey(0);
             SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
+            RubixCube cube = new RubixCube();
+
             while (!Raylib.WindowShouldClose())
             {
                 if(Keybinds.CloseKey())
@@ -48,7 +50,7 @@ namespace rbx
 
                     Raylib.ClearBackground(Colors.SystemPalette.bg);
 
-                    Raylib.DrawText("Cock", 20, 20, 20, Colors.SystemPalette.fg);
+
 
                     Raylib.EndDrawing();
                 }

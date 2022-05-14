@@ -3,7 +3,7 @@ using rbx.Generator;
 using System;
 using System.Collections.Specialized;
 namespace rbx.Generator {
-    class LCG : HRVGenerator {
+    public class LCG : HRVGenerator {
         public LCG(uint? seed = null) : base(seed) {}
         protected override uint InternalGenerate(uint range) {
             return (uint)((state = (uint)((ulong)state * multiplier + increment) % uint.MaxValue) % range);

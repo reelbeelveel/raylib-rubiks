@@ -58,14 +58,15 @@ namespace rbx.Colors {
 
     public static class SystemPalette {
         public static Color bg { get; set; }
-        public static Color fg { get; set; } = new Color(0, 0, 0, 255);
+        public static Color fg { get; set; } = Miamineon.Slime;
         public static Color[] SideColor = {
             Miamineon.Concrete,
             Miamineon.HotPink,
             Miamineon.Sunburn,
             Miamineon.Slime,
             Miamineon.Gulfstream,
-            Miamineon.Concrete
+            Miamineon.ViceYellow
         };
+        public static Color cubeBg = new Color(0, 0, 0, 255);
     }
 }

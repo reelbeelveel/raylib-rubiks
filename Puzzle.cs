@@ -1,16 +1,17 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 
-using rbx.Generator;
-
 using static rbx.Keybinds;
+using static rbx.RbxWindow;
 using rbx.Colors;
 
 using System;
 using System.Numerics;
 using System.Collections.Generic;
 
-namespace rbx {
+
+
+namespace rbx.Puzzle {
     public enum Mvmt {
         X, Xp, Y, Yp, Z, Zp,
         F, Fp, R, Rp, U, Up, D, Dp, B, Bp, L, Lp,
@@ -19,11 +20,37 @@ namespace rbx {
     public enum Side {
         X, Y, Z,
     }
+    public class MoveObject {
+        public MoveObject(Mvmt mvmt){
+            this.mvmt = mvmt;
+        }
+        public static MoveObject operator!(MoveObject lhs) {
+            return (Mvmt)(((int)lhs.mvmt % 2 != 0) ? lhs.mvmt - 1 : lhs.mvmt + 1);
+        }
+        public static bool IsOpposite(MoveObject lhs, MoveObject rhs) {
+            return (lhs == !rhs);
+        }
+        public static implicit operator Mvmt(MoveObject m) => m.mvmt;
+        public static implicit operator MoveObject(Mvmt m) => new MoveObject(m);
+        private Mvmt mvmt;
+    }
     public class RubixCube {
+        private const double BEZEL_RATIO = 0.1;
         public RubixCube(uint size = 3) {
+            Size = size;
             for(uint i = 0; i < 6; i++)
                 Faces.Add(new Face(i, size, this));
             ConnectFaces();
+        }
+        public void Shuffle(uint moves = 1000) {
+            for(uint i = 0; i < moves; i++) {
+                MoveObject move = new MoveObject(RbxWindow.rng.GenMvmt(true));
+                if(Moves.Count > 0 && MoveObject.IsOpposite(Moves[Moves.Count-1], move)) {
+                    i--;
+                    continue;
+                }
+                Move(move);
+            }
         }
 
         private void ConnectFaces() {
@@ -43,22 +70,131 @@ namespace rbx {
             this.X = Faces[0];
             this.Y = Faces[2];
             this.Z = Faces[1];
-            this.MainFace = this.X;
+        }
+        public void Draw(float size) {
+            float BezlSize = (float)(size * BEZEL_RATIO);
+            float TileSize = BezlSize + size;
+            float FaceSize = (float)((size * Size) + (BezlSize * (Size + 1)));
+            float TLxcoord = (float)RbxWindow.Center().X - (FaceSize/2);
+            float TLycoord = (float)RbxWindow.Center().Y - (FaceSize/2);
+            float TMxcoord = TLxcoord;
+            float TMycoord = TLycoord;
+            Rectangle bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            Raylib.DrawText($"X {this.X.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.X.Tiles[row,column]]);
+                }
+            }
+
+            TMxcoord = TLxcoord - FaceSize;
+            TMycoord = TLycoord;
+            bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            Raylib.DrawText($"Y {this.Y.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.Y.Tiles[row,column]]);
+                }
+            }
+
+            TMxcoord = TLxcoord;
+            TMycoord = TLycoord - FaceSize;
+            bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            Raylib.DrawText($"Z {this.Z.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.Z.Tiles[row,column]]);
+                }
+            }
+            TMxcoord = TLxcoord;
+            TMycoord = TLycoord + FaceSize;
+            bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            Raylib.DrawText($"ZOPP {this.ZOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.ZOpp().Tiles[row,column]]);
+                }
+            }
+            TMxcoord = TLxcoord + FaceSize;
+            TMycoord = TLycoord;
+            bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            Raylib.DrawText($"YOPP {this.YOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.YOpp().Tiles[row,column]]);
+                }
+            }
+            TMxcoord = TLxcoord + (2*FaceSize);
+            TMycoord = TLycoord;
+            Raylib.DrawText($"XOPP {this.XOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
+            for(int row = 0; row < Size; row++) {
+                for(int column = 0; column < Size; column++) {
+                    Rectangle tileRect = new Rectangle(
+                            TMxcoord+BezlSize+(column * TileSize),
+                            TMycoord+BezlSize+(row * TileSize),
+                            size,size);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.XOpp().Tiles[row,column]]);
+                }
+            }
+
+
+            Raylib.DrawText($"Viewing face {this.X.Id}", 20, 20, 10, SystemPalette.fg);
+            if(Solved())
+                Raylib.DrawText("SOLVED", 20, 40, 10, Color.GREEN);
+            else
+                Raylib.DrawText("NOT SOLVED", 20, 40, 10, Color.RED);
         }
 
-        public void Move(Mvmt mvmt, Side? face = null) {
-            Face f = face.HasValue
-                ? ((face == Side.X)
-                    ? this.X
-                    : ((face == Side.Y)
-                      ? this.Y
-                      : this.Z)
-                  )
-                : MainFace;
-            InternalMove(mvmt, f);
+        public bool Solved() {
+            bool solved = true;
+            foreach(Face f in Faces)
+                solved &= f.Solved();
+            return solved;
         }
 
-        private void InternalMove(Mvmt mvmt, Face face, bool prime = false) {
+        public void Move(Mvmt? mvmt) {
+            if(mvmt == null) return;
+            Mvmt m = (Mvmt)mvmt;
+            Moves.Add(m);
+            InternalMove(m);
+        }
+
+        public void Undo() {
+            if(Moves.Count > 0) {
+                Mvmt m = Moves[Moves.Count-1];
+                InternalMove(!new MoveObject(m));
+                Moves.RemoveAt(Moves.Count-1);
+            }
+        }
+
+        private void InternalMove(Mvmt mvmt, bool prime = false) {
             switch(mvmt) {
                 case Mvmt.X:
                     {
@@ -102,21 +238,24 @@ namespace rbx {
                         this.X = tmp;
                     } break;
 
-                case Mvmt.F: face.FMove(prime); break;
+                case Mvmt.F: this.X.FMove(prime); break;
 
-                case Mvmt.R: face.Rgt.FMove(prime); break;
-                case Mvmt.U: face.Top.FMove(prime); break;
-                case Mvmt.D: face.Bot.FMove(prime); break;
-                case Mvmt.B: face.Opp.FMove(prime); break;
-                case Mvmt.L: face.Lft.FMove(prime); break;
+                case Mvmt.R: this.X.Rgt.FMove(prime); break;
+                case Mvmt.U: this.X.Top.FMove(prime); break;
+                case Mvmt.D: this.X.Bot.FMove(prime); break;
+                case Mvmt.B: this.X.Opp.FMove(prime); break;
+                case Mvmt.L: this.X.Lft.FMove(prime); break;
 
-                case Mvmt.M: face.MMove(prime); break;
-                case Mvmt.E: face.EMove(prime); break;
-                case Mvmt.S: face.SMove(prime); break;
+                case Mvmt.M: this.X.MMove(prime); break;
+                case Mvmt.E: this.X.EMove(prime); break;
+                case Mvmt.S: this.X.SMove(prime); break;
                 default: // Prime Moves
-                    InternalMove(mvmt - 1, face, true);
-                    break;
+                             InternalMove(mvmt - 1, true);
+                             break;
             }
+            if(mvmt <= Mvmt.Zp)
+                foreach(var Face in Faces)
+                    Face.Orient();
         }
 
         protected class Face {
@@ -130,6 +269,19 @@ namespace rbx {
                         Tiles[i, j] = Id;
             }
 
+            public static bool operator==(Face lhs, Face rhs) {
+                return (lhs.Id == rhs.Id);
+            }
+            public static bool operator!=(Face lhs, Face rhs) {
+                return (lhs.Id != rhs.Id);
+            }
+            public bool Solved(){
+                bool solved = true;
+                foreach(uint tile in Tiles)
+                    solved &= (tile == this.Id);
+                return solved;
+            }
+
             public void Connect(Face[] faces) {
                 this.Top = faces[0];
                 this.Bot = faces[1];
@@ -138,7 +290,43 @@ namespace rbx {
                 this.Opp = faces[4];
             }
 
-            public void FMove(bool prime = false) {
+            public void Orient() {
+                uint wasTop = this.Top.Id;
+                if(this == Cube.Z) {
+                    this.Top = Cube.XOpp();
+                    this.Bot = Cube.X;
+                    this.Lft = Cube.Y;
+                    this.Rgt = Cube.YOpp();
+                } else if(this == Cube.ZOpp()) {
+                    this.Top = Cube.X;
+                    this.Bot = Cube.XOpp();
+                    this.Lft = Cube.Y;
+                    this.Rgt = Cube.YOpp();
+                } else {
+                    this.Top = Cube.Z;
+                    this.Bot = Cube.ZOpp();
+                    if(this == Cube.X) {
+                        this.Lft = Cube.Y;
+                        this.Rgt = Cube.YOpp();
+                    } else if(this == Cube.Y) {
+                        this.Lft = Cube.XOpp();
+                        this.Rgt = Cube.X;
+                    } else if(this == Cube.XOpp()) {
+                        this.Lft = Cube.YOpp();
+                        this.Rgt = Cube.Y;
+                    } else {
+                        this.Lft = Cube.X;
+                        this.Rgt = Cube.XOpp();
+                    }
+                }
+
+                if(wasTop == this.Top.Id) { return; }
+                if(wasTop == this.Rgt.Id) { SilentFMove(); return; }
+                if(wasTop == this.Bot.Id) { SilentFMove(); SilentFMove(); return; }
+                SilentFMove(true);
+            }
+
+            protected void SilentFMove(bool prime = false) {
                 uint[,] RtoL = new uint[Size, Size];
                 uint[,] UtoD = new uint[Size, Size];
                 uint[,] Clockwise = new uint[Size, Size];
@@ -156,23 +344,26 @@ namespace rbx {
                     }
                 }
                 Tiles = prime ? AntiClockwise : Clockwise;
-                if(prime) {
-                    Top.ISide(Id, Rgt.ISide(Id, Bot.ISide(Id, Lft.ISide(Id, Top.ISide(Id)))));
+            }
 
+            public void FMove(bool prime = false) {
+                SilentFMove(prime);
+                if(prime) {
+                    Top.FSide(Id, Rgt.FSide(Id, Bot.FSide(Id, Lft.FSide(Id, Top.FSide(Id)))));
                 } else {
-                    Top.ISide(Id, Lft.ISide(Id, Bot.ISide(Id, Rgt.ISide(Id, Top.ISide(Id)))));
+                    Top.FSide(Id, Lft.FSide(Id, Bot.FSide(Id, Rgt.FSide(Id, Top.FSide(Id)))));
                 }
             }
             public void MMove(bool prime = false) {
             }
-            
+
             public void EMove(bool prime = false) {
             }
 
             public void SMove(bool prime = false) {
             }
 
-            protected uint[] ISide(uint id, uint[] assign = null) {
+            protected uint[] FSide(uint id, uint[] assign = null) {
                 uint[] row = new uint[Size];
                 uint? i = null;
                 uint? j = null;
@@ -185,7 +376,7 @@ namespace rbx {
 
                 if(i == null) {
                     for(i = 0; i < Size; i++) {
-                        uint k = (j > 0) ? Size - (uint)i - 1 : (uint)i;
+                        uint k = (j == 0) ? Size - (uint)i - 1 : (uint)i;
                         row[(uint)i] = Tiles[k, (uint)j];
                         if(assign != null)
                             Tiles[k, (uint)j] = assign[(uint)i];
@@ -201,9 +392,9 @@ namespace rbx {
                 return row;
             }
 
-            private RubixCube Cube;
-            private uint[,] Tiles;
-            private uint Size;
+            public RubixCube Cube;
+            public uint[,] Tiles;
+            public uint Size;
             public Face? Top;
             public Face? Bot;
             public Face? Lft;
@@ -213,12 +404,14 @@ namespace rbx {
         }
 
         private List<Face> Faces = new List<Face>();
+        private List<MoveObject> Moves = new List<MoveObject>();
         private Face X;
         private Face Y;
         private Face Z;
         private Face XOpp () => this.X.Opp;
         private Face YOpp () => this.Y.Opp;
         private Face ZOpp () => this.Z.Opp;
-        private Face MainFace;
+        private Face MainFace () => this.X;
+        private uint Size;
     }
 }

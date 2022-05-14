@@ -25,6 +25,19 @@ namespace rbx{
         public static bool ShuffleKey() {
             return IsKeyPressed(KEY_SPACE);
         }
+        public static int? NumKey() {
+            if(IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) return 1;
+            if(IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) return 2;
+            if(IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) return 3;
+            if(IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) return 4;
+            if(IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) return 5;
+            if(IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) return 6;
+            if(IsKeyPressed(KEY_SEVEN) || IsKeyPressed(KEY_KP_7)) return 7;
+            if(IsKeyPressed(KEY_EIGHT) || IsKeyPressed(KEY_KP_8)) return 8;
+            if(IsKeyPressed(KEY_NINE) || IsKeyPressed(KEY_KP_9)) return 9;
+            if(IsKeyPressed(KEY_ZERO) || IsKeyPressed(KEY_KP_0)) return 10;
+            return null;
+        }
         public static bool Control_Mod(KeyboardKey key) {
             return IsKeyPressed(key) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
         }

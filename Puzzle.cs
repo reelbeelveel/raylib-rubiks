@@ -277,8 +277,9 @@ namespace rbx.Puzzle {
             }
             public bool Solved(){
                 bool solved = true;
+                uint id = Tiles[0,0];
                 foreach(uint tile in Tiles)
-                    solved &= (tile == this.Id);
+                    solved &= (tile == id);
                 return solved;
             }
 

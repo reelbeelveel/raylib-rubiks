@@ -57,8 +57,13 @@ namespace rbx
 
                     Raylib.ClearBackground(Colors.SystemPalette.bg);
 
+                    int? NumKey = Keybinds.NumKey();
+                    if(NumKey != null) {
+                        cube = new RubixCube((uint)NumKey);
+                    }
                     if(Keybinds.ShuffleKey()) {
-                        cube = new RubixCube();
+                        if(!cube.Solved())
+                            cube = new RubixCube();
                         cube.Shuffle();
                     }
                     if(Keybinds.UndoKey()) {

@@ -2,10 +2,12 @@ using Raylib_cs;
 using static Raylib_cs.Raylib;
 
 using rbx.Generator;
+using rbx.Puzzle;
 
 using static rbx.HelpModule;
 using static rbx.Keybinds;
 using static rbx.ScreenShot;
+using static rbx.RbxWindow;
 using rbx.Colors;
 
 using System;
@@ -17,15 +19,16 @@ namespace rbx
     {
         public static void Main()
         {
-            Raylib.InitWindow(800, 480, "Raylib Rubiks");
-
-            LCG lcg = new LCG((uint)new Random().Next());
-            Colors.SystemPalette.bg = lcg.GenColor();
+            RbxWindow.Init();
+            RbxWindow.rng = new LCG((uint)new Random().Next());
+            Colors.SystemPalette.bg = RbxWindow.rng.GenColor();
 
             Raylib.SetExitKey(0);
             SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
             RubixCube cube = new RubixCube();
+            //cube.Shuffle();
+            float size = 20;
 
             while (!Raylib.WindowShouldClose())
             {
@@ -44,13 +47,24 @@ namespace rbx
                 if(Keybinds.HelpKey()) {
                     HelpModule.ToggleHelp();
                 }
+                float MWMove = Raylib.GetMouseWheelMove();
+                if(Math.Abs(MWMove) > 0.1) {
+                    size += MWMove;
+                }
                 if(HelpModule.HelpActive) {
                 } else {
                     Raylib.BeginDrawing();
 
                     Raylib.ClearBackground(Colors.SystemPalette.bg);
 
-
+                    if(Keybinds.ShuffleKey()) {
+                        cube = new RubixCube();
+                        cube.Shuffle();
+                    }
+                    if(Keybinds.UndoKey()) {
+                        cube.Undo();
+                    } else cube.Move(Keybinds.InputMvmt());
+                    cube.Draw(size);
 
                     Raylib.EndDrawing();
                 }

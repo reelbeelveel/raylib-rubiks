@@ -349,19 +349,57 @@ namespace rbx.Puzzle {
 
             public void FMove(bool prime = false) {
                 SilentFMove(prime);
-                if(prime) {
-                    Top.FSide(Id, Rgt.FSide(Id, Bot.FSide(Id, Lft.FSide(Id, Top.FSide(Id)))));
-                } else {
-                    Top.FSide(Id, Lft.FSide(Id, Bot.FSide(Id, Rgt.FSide(Id, Top.FSide(Id)))));
-                }
-            }
+                if(prime)
+                    Top.FSide(Id,
+                            Rgt.FSide(Id,
+                                Bot.FSide(Id,
+                                    Lft.FSide(Id,
+                                        Top.FSide(Id)))));
+                else
+                    Top.FSide(Id,
+                            Lft.FSide(Id,
+                                Bot.FSide(Id,
+                                    Rgt.FSide(Id,
+                                        Top.FSide(Id)))));
             public void MMove(bool prime = false) {
+                if(Size < 3) return;
+                if(prime)
+                    MSide(
+                        Bot.MSide(
+                            Opp.MSide(
+                                Top.MSide(
+                                    MSide()),
+                                true)));
+                else
+                    MSide(
+                        Top.MSide(
+                            Opp.MSide(
+                                Bot.MSide(MSide(), true))));
             }
 
             public void EMove(bool prime = false) {
+                if(Size < 3) return;
+                if(prime) ESide(Rgt.ESide(Opp.ESide(Lft.ESide(ESide()))));
+                else ESide(Lft.ESide(Opp.ESide(Lft.ESide(ESide()))));
             }
 
             public void SMove(bool prime = false) {
+                if(Size < 3) return;
+                if(prime)
+                    Top.ESide(
+                        Rgt.MSide(
+                            Bot.ESide(
+                                Lft.MSide(
+                                    Top.ESide(),
+                                    true)),
+                            true));
+                else
+                    Top.ESide(
+                        Lft.MSide(
+                            Bot.ESide(
+                                Rgt.MSide(
+                                    Top.ESide(null, true)),
+                                true)));
             }
 
             protected uint[] FSide(uint id, uint[] assign = null) {
@@ -391,6 +429,30 @@ namespace rbx.Puzzle {
                     }
                 }
                 return row;
+            }
+            protected uint[] MSide(uint[] assign=null, bool prime=false) {
+                uint[] row = new uint[Size];
+                uint[] reversed = new uint[Size];
+                uint pos = (Size-1)/2; // TODO fix for other sizes
+                for(int i = 0; i < Size; i++) {
+                    row[i] = this.Tiles[i,pos];
+                    reversed[Size-i-1] = row[i];
+                    if(assign != null)
+                        Tiles[i,pos] = (uint)assign[i];
+                }
+                return prime ? reversed : row;
+            }
+            protected uint[] ESide(uint[] assign=null, bool prime=false) {
+                uint[] row = new uint[Size];
+                uint[] reversed = new uint[Size];
+                uint pos = (Size-1)/2; // TODO fix for other sizes
+                for(int i = 0; i < Size; i++) {
+                    row[i] = this.Tiles[pos,i];
+                    reversed[Size-i-1] = row[i];
+                    if(assign != null)
+                        Tiles[pos,i] = (uint)assign[i];
+                }
+                return prime ? reversed : row;
             }
 
             public RubixCube Cube;

@@ -28,7 +28,7 @@ namespace rbx
 
             RubixCube cube = new RubixCube();
             //cube.Shuffle();
-            float size = 20;
+            float size = 80;
 
             while (!Raylib.WindowShouldClose())
             {
@@ -57,7 +57,7 @@ namespace rbx
 
                     Raylib.ClearBackground(Colors.SystemPalette.bg);
 
-                    int? NumKey = Keybinds.NumKey();
+                    uint? NumKey = Keybinds.NumKey();
                     if(NumKey != null) {
                         cube = new RubixCube((uint)NumKey);
                     }

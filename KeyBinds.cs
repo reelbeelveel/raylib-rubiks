@@ -25,28 +25,54 @@ namespace rbx{
         public static bool ShuffleKey() {
             return IsKeyPressed(KEY_SPACE);
         }
-        public static int? NumKey() {
-            if(IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) return 1;
-            if(IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) return 2;
-            if(IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) return 3;
-            if(IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) return 4;
-            if(IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) return 5;
-            if(IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) return 6;
-            if(IsKeyPressed(KEY_SEVEN) || IsKeyPressed(KEY_KP_7)) return 7;
-            if(IsKeyPressed(KEY_EIGHT) || IsKeyPressed(KEY_KP_8)) return 8;
-            if(IsKeyPressed(KEY_NINE) || IsKeyPressed(KEY_KP_9)) return 9;
-            if(IsKeyPressed(KEY_ZERO) || IsKeyPressed(KEY_KP_0)) return 10;
+        public static uint? NumKey() {
+            for(uint i = 0; i < 10; i++)
+                if(Any_NumPressed(i)) return i;
             return null;
         }
-        public static bool Control_Mod(KeyboardKey key) {
-            return IsKeyPressed(key) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
+
+        public static bool Alt_Mod(KeyboardKey key)
+            => IsKeyPressed(key) && Any_Alt();
+        public static bool Control_Mod(KeyboardKey key)
+            => IsKeyPressed(key) && Any_Control();
+        public static bool Shift_Mod(KeyboardKey key)
+            => IsKeyPressed(key) && Any_Shift();
+
+        public static bool Any_NumPressed(uint num) {
+            switch(num) {
+                case 0: return IsKeyPressed(KEY_ZERO)
+                        || IsKeyPressed(KEY_KP_0);
+                case 1: return IsKeyPressed(KEY_ONE)
+                        || IsKeyPressed(KEY_KP_1);
+                case 2: return IsKeyPressed(KEY_TWO)
+                        || IsKeyPressed(KEY_KP_2);
+                case 3: return IsKeyPressed(KEY_THREE)
+                        || IsKeyPressed(KEY_KP_3);
+                case 4: return IsKeyPressed(KEY_FOUR)
+                        || IsKeyPressed(KEY_KP_4);
+                case 5: return IsKeyPressed(KEY_FIVE)
+                        || IsKeyPressed(KEY_KP_5);
+                case 6: return IsKeyPressed(KEY_SIX)
+                        || IsKeyPressed(KEY_KP_6);
+                case 7: return IsKeyPressed(KEY_SEVEN)
+                        || IsKeyPressed(KEY_KP_7);
+                case 8: return IsKeyPressed(KEY_EIGHT)
+                        || IsKeyPressed(KEY_KP_8);
+                case 9: return IsKeyPressed(KEY_NINE)
+                        || IsKeyPressed(KEY_KP_9);
+                default: return false;
+            }
         }
-        public static bool Shift_Mod(KeyboardKey key) {
-            return IsKeyPressed(key) && (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT));
-        }
-        public static bool Alt_Mod(KeyboardKey key) {
-            return IsKeyPressed(key) && (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT));
-        }
+        public static bool Any_Alt()
+            => IsKeyDown(KEY_LEFT_ALT)
+            || IsKeyDown(KEY_RIGHT_ALT);
+        public static bool Any_Control()
+            => IsKeyDown(KEY_LEFT_CONTROL)
+            || IsKeyDown(KEY_RIGHT_CONTROL);
+        public static bool Any_Shift()
+            => IsKeyDown(KEY_LEFT_SHIFT)
+            || IsKeyDown(KEY_RIGHT_SHIFT);
+
         public static Mvmt? InputMvmt() {
             KeyboardKey[] MvmtKeys = new KeyboardKey[]{
                KEY_X, KEY_Y, KEY_Z, KEY_F, KEY_R, KEY_U, KEY_D, KEY_B, KEY_L, KEY_M, KEY_E, KEY_S

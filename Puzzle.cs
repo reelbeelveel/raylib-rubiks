@@ -44,7 +44,7 @@ namespace rbx.Puzzle {
         }
         public void Shuffle(uint moves = 1000) {
             for(uint i = 0; i < moves; i++) {
-                MoveObject move = new MoveObject(RbxWindow.rng.GenMvmt(true));
+                MoveObject move = new MoveObject(RbxWindow.rng.GenMvmt());
                 if(Moves.Count > 0 && MoveObject.IsOpposite(Moves[Moves.Count-1], move)) {
                     i--;
                     continue;
@@ -81,7 +81,7 @@ namespace rbx.Puzzle {
             float TMycoord = TLycoord;
             Rectangle bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            Raylib.DrawText($"X {this.X.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"X {this.X.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
@@ -96,7 +96,7 @@ namespace rbx.Puzzle {
             TMycoord = TLycoord;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            Raylib.DrawText($"Y {this.Y.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"Y {this.Y.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
@@ -111,7 +111,7 @@ namespace rbx.Puzzle {
             TMycoord = TLycoord - FaceSize;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            Raylib.DrawText($"Z {this.Z.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"Z {this.Z.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
@@ -125,7 +125,7 @@ namespace rbx.Puzzle {
             TMycoord = TLycoord + FaceSize;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            Raylib.DrawText($"ZOPP {this.ZOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"ZOPP {this.ZOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
@@ -139,7 +139,7 @@ namespace rbx.Puzzle {
             TMycoord = TLycoord;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            Raylib.DrawText($"YOPP {this.YOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"YOPP {this.YOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
@@ -151,7 +151,7 @@ namespace rbx.Puzzle {
             }
             TMxcoord = TLxcoord + (2*FaceSize);
             TMycoord = TLycoord;
-            Raylib.DrawText($"XOPP {this.XOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"XOPP {this.XOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
             for(int row = 0; row < Size; row++) {
@@ -165,11 +165,11 @@ namespace rbx.Puzzle {
             }
 
 
-            Raylib.DrawText($"Viewing face {this.X.Id}", 20, 20, 10, SystemPalette.fg);
+            Raylib.DrawText($"Viewing face {this.X.Id}", 20, 20, 50, SystemPalette.fg);
             if(Solved())
-                Raylib.DrawText("SOLVED", 20, 40, 10, Color.GREEN);
+                Raylib.DrawText("SOLVED", 20, 80, 50, Color.GREEN);
             else
-                Raylib.DrawText("NOT SOLVED", 20, 40, 10, Color.RED);
+                Raylib.DrawText("NOT SOLVED", 20, 80, 50, Color.RED);
         }
 
         public bool Solved() {

@@ -251,8 +251,9 @@ namespace rbx.Puzzle {
                 case Mvmt.S: this.X.SMove(prime); break;
                 default: // Prime Moves
                              InternalMove(mvmt - 1, true);
-                             break;
+                             return;
             }
+            Console.WriteLine($"Made move {mvmt}{(prime ? 'p' : ' ')}");
             if(mvmt <= Mvmt.Zp)
                 foreach(var Face in Faces)
                     Face.Orient();
@@ -361,6 +362,8 @@ namespace rbx.Puzzle {
                                 Bot.FSide(Id,
                                     Rgt.FSide(Id,
                                         Top.FSide(Id)))));
+            }
+
             public void MMove(bool prime = false) {
                 if(Size < 3) return;
                 if(prime)
@@ -379,8 +382,17 @@ namespace rbx.Puzzle {
 
             public void EMove(bool prime = false) {
                 if(Size < 3) return;
-                if(prime) ESide(Rgt.ESide(Opp.ESide(Lft.ESide(ESide()))));
-                else ESide(Lft.ESide(Opp.ESide(Lft.ESide(ESide()))));
+                if(prime)
+                    this.ESide(
+                        Rgt.ESide(
+                            Opp.ESide(
+                                Lft.ESide(
+                                    this.ESide()))));
+                else this.ESide(
+                        Lft.ESide(
+                            Opp.ESide(
+                                Rgt.ESide(
+                                    this.ESide()))));
             }
 
             public void SMove(bool prime = false) {
@@ -432,27 +444,26 @@ namespace rbx.Puzzle {
             }
             protected uint[] MSide(uint[] assign=null, bool prime=false) {
                 uint[] row = new uint[Size];
-                uint[] reversed = new uint[Size];
                 uint pos = (Size-1)/2; // TODO fix for other sizes
-                for(int i = 0; i < Size; i++) {
-                    row[i] = this.Tiles[i,pos];
-                    reversed[Size-i-1] = row[i];
+                for(uint i = 0; i < Size; i++) {
+                    uint k = (prime) ? (Size - i) - 1 : i;
+                    row[k] = Tiles[i,pos];
                     if(assign != null)
                         Tiles[i,pos] = (uint)assign[i];
                 }
-                return prime ? reversed : row;
+                return row;
             }
+
             protected uint[] ESide(uint[] assign=null, bool prime=false) {
                 uint[] row = new uint[Size];
-                uint[] reversed = new uint[Size];
                 uint pos = (Size-1)/2; // TODO fix for other sizes
-                for(int i = 0; i < Size; i++) {
-                    row[i] = this.Tiles[pos,i];
-                    reversed[Size-i-1] = row[i];
+                for(uint i = 0; i < Size; i++) {
+                    uint k = (prime) ? (Size - i) - 1 : i;
+                    row[k] = Tiles[pos,i];
                     if(assign != null)
                         Tiles[pos,i] = (uint)assign[i];
                 }
-                return prime ? reversed : row;
+                return row;
             }
 
             public RubixCube Cube;

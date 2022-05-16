@@ -49,7 +49,7 @@ namespace rbx{
         }
         public static Mvmt? InputMvmt() {
             KeyboardKey[] MvmtKeys = new KeyboardKey[]{
-               KEY_X, KEY_Y, KEY_Z, KEY_F, KEY_R, KEY_U, KEY_D, KEY_B, KEY_L, KEY_M, KEY_S, KEY_E
+               KEY_X, KEY_Y, KEY_Z, KEY_F, KEY_R, KEY_U, KEY_D, KEY_B, KEY_L, KEY_M, KEY_E, KEY_S
             };
             for(int i = 0; i < 12; i++) {
                 if(IsKeyPressed(MvmtKeys[i])) {

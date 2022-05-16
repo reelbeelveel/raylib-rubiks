@@ -20,7 +20,7 @@ namespace rbx{
             return IsKeyPressed(KEY_F11);
         }
         public static bool UndoKey() {
-            return IsKeyDown(KEY_Z) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
+            return IsKeyPressed(KEY_Z) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
         }
         public static bool ShuffleKey() {
             return IsKeyPressed(KEY_SPACE);
@@ -79,7 +79,7 @@ namespace rbx{
             };
             for(int i = 0; i < 12; i++) {
                 if(IsKeyPressed(MvmtKeys[i])) {
-                    if(IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
+                    if(Any_Shift())
                         return (Mvmt)(i * 2) + 1;
                     return (Mvmt)(i * 2);
                 }

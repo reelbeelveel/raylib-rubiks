@@ -59,7 +59,7 @@ namespace rbx
 
                     uint? NumKey = Keybinds.NumKey();
                     if(NumKey != null) {
-                        cube = new RubixCube((uint)NumKey);
+                        cube = new RubixCube((uint)((NumKey == 0) ? 10 : NumKey));
                     }
                     if(Keybinds.ShuffleKey()) {
                         if(!cube.Solved())
@@ -69,7 +69,11 @@ namespace rbx
                     if(Keybinds.UndoKey()) {
                         cube.Undo();
                     } else cube.Move(Keybinds.InputMvmt());
-                    cube.Draw(size);
+                    Raylib.BeginMode3D(RbxWindow.camera);
+
+                    Raylib.EndMode3D();
+
+                    cube.DrawMiniMap();
 
                     Raylib.EndDrawing();
                 }

@@ -35,7 +35,7 @@ namespace rbx.Puzzle {
         private Mvmt mvmt;
     }
     public class RubixCube {
-        private const double BEZEL_RATIO = 0.1;
+        private const double BEZEL_RATIO = 0.15;
         public RubixCube(uint size = 3) {
             Size = size;
             for(uint i = 0; i < 6; i++)
@@ -71,12 +71,14 @@ namespace rbx.Puzzle {
             this.Y = Faces[2];
             this.Z = Faces[1];
         }
-        public void Draw(float size) {
+        public void DrawMiniMap() {
+            // TODO figure out anti aliasing
+            float size = RbxWindow.MiniMapUnitSize(Size);
             float BezlSize = (float)(size * BEZEL_RATIO);
             float TileSize = BezlSize + size;
             float FaceSize = (float)((size * Size) + (BezlSize * (Size + 1)));
-            float TLxcoord = (float)RbxWindow.Center().X - (FaceSize/2);
-            float TLycoord = (float)RbxWindow.Center().Y - (FaceSize/2);
+            float TLxcoord = (float)RbxWindow.MiniMapCenter().X - (FaceSize/2);
+            float TLycoord = (float)RbxWindow.MiniMapCenter().Y - (FaceSize/2);
             float TMxcoord = TLxcoord;
             float TMycoord = TLycoord;
             Rectangle bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
@@ -367,27 +369,27 @@ namespace rbx.Puzzle {
             public void MMove(bool prime = false) {
                 if(Size < 3) return;
                 if(prime)
-                    MSide(
-                        Bot.MSide(
-                            Opp.MSide(
-                                Top.MSide(
-                                    MSide()),
-                                true)));
+                    this.MSide(
+                            Bot.MSide(
+                                Opp.MSide(
+                                    Top.MSide(
+                                        MSide(), true),
+                                    true)));
                 else
-                    MSide(
-                        Top.MSide(
-                            Opp.MSide(
-                                Bot.MSide(MSide(), true))));
+                    this.MSide(
+                            Top.MSide(
+                                Opp.MSide(
+                                    Bot.MSide(MSide(), true), true)));
             }
 
             public void EMove(bool prime = false) {
                 if(Size < 3) return;
                 if(prime)
                     this.ESide(
-                        Rgt.ESide(
-                            Opp.ESide(
-                                Lft.ESide(
-                                    this.ESide()))));
+                            Rgt.ESide(
+                                Opp.ESide(
+                                    Lft.ESide(
+                                        this.ESide()))));
                 else this.ESide(
                         Lft.ESide(
                             Opp.ESide(
@@ -399,19 +401,24 @@ namespace rbx.Puzzle {
                 if(Size < 3) return;
                 if(prime)
                     Top.ESide(
-                        Rgt.MSide(
-                            Bot.ESide(
-                                Lft.MSide(
-                                    Top.ESide(),
-                                    true)),
-                            true));
+                            Rgt.MSide(
+                                Bot.ESide(
+                                    Lft.MSide(
+                                        Top.ESide(null, true)
+                                        ),
+                                    true)
+                                ),
+                            true);
                 else
                     Top.ESide(
-                        Lft.MSide(
-                            Bot.ESide(
-                                Rgt.MSide(
-                                    Top.ESide(null, true)),
-                                true)));
+                            Lft.MSide(
+                                Bot.ESide(
+                                    Rgt.MSide(
+                                        Top.ESide(),
+                                        true)
+                                    ),
+                                true)
+                            );
             }
 
             protected uint[] FSide(uint id, uint[] assign = null) {

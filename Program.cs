@@ -8,6 +8,7 @@ using static rbx.HelpModule;
 using static rbx.Keybinds;
 using static rbx.ScreenShot;
 using static rbx.RbxWindow;
+using static rbx.GfxConstants;
 using rbx.Colors;
 
 using System;
@@ -27,8 +28,8 @@ namespace rbx
             SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
             RubixCube cube = new RubixCube();
+            float OrbitRadius = 5.0f;
             //cube.Shuffle();
-            float size = 80;
 
             while (!Raylib.WindowShouldClose())
             {
@@ -49,7 +50,10 @@ namespace rbx
                 }
                 float MWMove = Raylib.GetMouseWheelMove();
                 if(Math.Abs(MWMove) > 0.1) {
-                    size += MWMove;
+                    // TODO Log scrolling
+                    OrbitRadius -= MWMove;
+                    OrbitRadius = (OrbitRadius < ZOOM_MIN_LIMIT) ? ZOOM_MIN_LIMIT : OrbitRadius;
+                    OrbitRadius = (OrbitRadius > ZOOM_MAX_LIMIT) ? ZOOM_MAX_LIMIT : OrbitRadius;
                 }
                 if(HelpModule.HelpActive) {
                 } else {
@@ -69,8 +73,13 @@ namespace rbx
                     if(Keybinds.UndoKey()) {
                         cube.Undo();
                     } else cube.Move(Keybinds.InputMvmt());
+                    RbxWindow.SetOrbitRadius(OrbitRadius);
+                    UpdateCamera(ref RbxWindow.camera);
+
                     Raylib.BeginMode3D(RbxWindow.camera);
-                    cube.Draw(size);
+
+                    cube.Draw3D();
+
                     Raylib.EndMode3D();
 
                     cube.DrawMiniMap();

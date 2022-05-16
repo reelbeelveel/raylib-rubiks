@@ -8,7 +8,7 @@ namespace rbx {
     public static class RbxWindow {
         public static void Init() {
             Raylib.InitWindow(width, height, title);
-            camera.position = new Vector3(0.0f, 50.0f, -120.0f);
+            camera.position = CameraPosition;
             camera.target = new Vector3(0.0f, 0.0f, 0.0f);
             camera.up = new Vector3(0.0f, 1.0f, 0.0f);
             camera.fovy = 30.0f;
@@ -26,6 +26,9 @@ namespace rbx {
                 MiniMapHeight
             );
         }
+        public static void SetOrbitRadius(float radius) {
+            camera.position = Vector3.Normalize(CameraPosition) * radius;
+        }
 
         public static Vector2 Center() => new Vector2(Width/2, Height/2);
         public static Vector2 MiniMapCenter() => new Vector2(Width - (MiniMapWidth / 2), (MiniMapHeight / 2));
@@ -37,6 +40,8 @@ namespace rbx {
         private static int MiniMapWidth = (int)(4*216/3);
         private static int width = 1920;
         private static int height = 1080;
+        
+        private static Vector3 CameraPosition = new Vector3(-20.0f, -20.0f, 20.0f);
     }
 }
 

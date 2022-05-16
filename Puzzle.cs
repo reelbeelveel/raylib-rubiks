@@ -3,6 +3,7 @@ using static Raylib_cs.Raylib;
 
 using static rbx.Keybinds;
 using static rbx.RbxWindow;
+using static rbx.GfxConstants;
 using rbx.Colors;
 
 using System;
@@ -35,7 +36,6 @@ namespace rbx.Puzzle {
         private Mvmt mvmt;
     }
     public class RubixCube {
-        private const double BEZEL_RATIO = 0.15;
         public RubixCube(uint size = 3) {
             Size = size;
             for(uint i = 0; i < 6; i++)
@@ -71,14 +71,15 @@ namespace rbx.Puzzle {
             this.Y = Faces[2];
             this.Z = Faces[1];
         }
-        public void Draw() {
-
+        public void Draw3D() {
+            foreach(var Face in Faces)
+                Face.Draw3D();
         }
 
         public void DrawMiniMap() {
             // TODO figure out anti aliasing
             float size = RbxWindow.MiniMapUnitSize(Size);
-            float BezlSize = (float)(size * BEZEL_RATIO);
+            float BezlSize = (float)(size * GfxConstants.BEZEL_RATIO_MM);
             float TileSize = BezlSize + size;
             float FaceSize = (float)((size * Size) + (BezlSize * (Size + 1)));
             float TLxcoord = (float)RbxWindow.MiniMapCenter().X - (FaceSize);
@@ -479,6 +480,57 @@ namespace rbx.Puzzle {
                 return row;
             }
 
+            public void Draw3D() {
+                //Raylib.DrawLine3D(new Vector3(0f, 0f, 0f), TopLftVec(), (HexColor)SystemPalette.SideColor[Id]);
+                //Raylib.DrawLine3D(new Vector3(0f, 0f, 0f), BotRgtVec(), SystemPalette.SideColor[Id]);
+                Raylib.DrawCubeV(CenterVec()*GfxConstants.FACE_SIZE_3D / 2, (CenterVec() - TopLftVec()) + (CenterVec() * 0.0001f) * GfxConstants.FACE_SIZE_3D, SystemPalette.cubeBg);
+                for(uint row = 0; row < Size; row++) {
+                    for(uint col = 0; col < Size; col++) {
+                        Vector3 pos = TopLftVec() * GfxConstants.FACE_SIZE_3D / 2;
+                        Vector3 BezlOff = ((row+1) * Bot.CenterVec() * TileSize3D() * GfxConstants.BEZEL_RATIO_3D)
+                            + ((col+1) * Rgt.CenterVec() * TileSize3D() * GfxConstants.BEZEL_RATIO_3D);
+                        Vector3 FaceOff = ((row + 0.5f) * Bot.CenterVec() * TileSize3D())
+                            + ((col + 0.5f) * Rgt.CenterVec() * TileSize3D());
+                        //Raylib.DrawLine3D(new Vector3(0f, 0f, 0f), pos, !(HexColor)SystemPalette.SideColor[Tiles[row,col]]);
+                        Raylib.DrawCubeV(pos + BezlOff + FaceOff, TileSizeVec(), SystemPalette.SideColor[Tiles[row,col]]);
+                        //Raylib.DrawCubeWiresV(pos + BezlOff + FaceOff, TileSizeVec(), Miamineon.Lime);  
+                    }
+                }
+
+            }
+
+            private Vector3 CenterVec() {
+                if(this == Cube.X)
+                    return new Vector3(0f, 0f, 1f);
+                if(this == Cube.Z)
+                    return new Vector3(0f, 1f, 0f);
+                if(this == Cube.Y)
+                    return new Vector3(-1f, 0f, 0f);
+                if(this == Cube.ZOpp())
+                    return new Vector3(0f, -1f, 0f);
+                if(this == Cube.YOpp())
+                    return new Vector3(1f, 0f, 0f);
+                if(this == Cube.XOpp())
+                    return new Vector3(0f, 0f, -1f);
+                throw new Exception("Invalid face id.");
+            }
+            private Vector3 TopLftVec() {
+                return CenterVec() + Top.CenterVec() + Lft.CenterVec();
+            }
+            private Vector3 BotRgtVec() {
+                return CenterVec() + Bot.CenterVec() + Rgt.CenterVec();
+            }
+            private Vector3 TileSizeVec() {
+                Vector3 svec = (TopLftVec() - CenterVec()) * TileSize3D()
+                    + (CenterVec() * 0.01f);
+                return (this == Cube.X || this == Cube.XOpp()) ? -1 * svec : svec;
+
+            }
+
+            private float TileSize3D() {
+                return ((float)GfxConstants.FACE_SIZE_3D / (Size + ((Size + 1) * GfxConstants.BEZEL_RATIO_3D)));
+            }
+
             public RubixCube Cube;
             public uint[,] Tiles;
             public uint Size;
@@ -488,6 +540,7 @@ namespace rbx.Puzzle {
             public Face? Rgt;
             public Face? Opp;
             public uint Id;
+
         }
 
         private List<Face> Faces = new List<Face>();

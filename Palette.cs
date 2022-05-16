@@ -12,11 +12,20 @@ namespace rbx.Colors {
             this.g = g;
             this.b = b;
         }
+        public HexColor(int r, int g, int b) {
+            this.r = (byte)r;
+            this.g = (byte)g;
+            this.b = (byte)b;
+        }
         
         public HexColor(Color c) {
             this.r = c.r;
             this.g = c.g;
             this.b = c.b;
+        }
+
+        public static HexColor operator!(HexColor c) {
+            return new HexColor(255 - c.r, 255 - c.g, 255 - c.b);
         }
 
         public HexColor(string HexString) {
@@ -34,7 +43,7 @@ namespace rbx.Colors {
         }
 
         public static implicit operator Color(HexColor h) => new Color((byte)h.r, (byte)h.g, (byte)h.b, (byte)255);
-        public static explicit operator HexColor(Color c) => new HexColor(c.r, c.g, c.b);
+        public static implicit operator HexColor(Color c) => new HexColor(c.r, c.g, c.b);
 
         public byte r;
         public byte g;
@@ -58,6 +67,7 @@ namespace rbx.Colors {
 
     public static class SystemPalette {
         public static Color bg { get; set; }
+        public static Color MiniMapBg() => !(HexColor)bg;
         public static Color fg { get; set; } = Miamineon.Slime;
         public static Color[] SideColor = {
             Miamineon.Concrete,

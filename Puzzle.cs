@@ -71,17 +71,23 @@ namespace rbx.Puzzle {
             this.Y = Faces[2];
             this.Z = Faces[1];
         }
+        public void Draw() {
+
+        }
+
         public void DrawMiniMap() {
             // TODO figure out anti aliasing
             float size = RbxWindow.MiniMapUnitSize(Size);
             float BezlSize = (float)(size * BEZEL_RATIO);
             float TileSize = BezlSize + size;
             float FaceSize = (float)((size * Size) + (BezlSize * (Size + 1)));
-            float TLxcoord = (float)RbxWindow.MiniMapCenter().X - (FaceSize/2);
+            float TLxcoord = (float)RbxWindow.MiniMapCenter().X - (FaceSize);
             float TLycoord = (float)RbxWindow.MiniMapCenter().Y - (FaceSize/2);
             float TMxcoord = TLxcoord;
             float TMycoord = TLycoord;
+            Rectangle MiniMapBkdrop = RbxWindow.MiniMapRect();
             Rectangle bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
+            Raylib.DrawRectangleRec(MiniMapBkdrop, SystemPalette.MiniMapBg());
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
             //Raylib.DrawText($"X {this.X.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {

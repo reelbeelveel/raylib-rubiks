@@ -18,6 +18,14 @@ namespace rbx {
         public static int Height { set { height = value; Raylib.SetWindowSize(width, height); } get { return height; } }
         public static int Width  { set { width  = value; Raylib.SetWindowSize(width, height); } get { return width; } }
         public static float MiniMapUnitSize(float size) { return (((float)MiniMapHeight/4)/size); }
+        public static Rectangle MiniMapRect() {
+            return new Rectangle(
+                ((float)width - (float)MiniMapWidth),
+                0.0f,
+                MiniMapWidth,
+                MiniMapHeight
+            );
+        }
 
         public static Vector2 Center() => new Vector2(Width/2, Height/2);
         public static Vector2 MiniMapCenter() => new Vector2(Width - (MiniMapWidth / 2), (MiniMapHeight / 2));
@@ -25,8 +33,8 @@ namespace rbx {
         public static Camera3D camera = new Camera3D();
 
         private static String title = "Raylib Rubix";
-        private static int MiniMapWidth = 384;
         private static int MiniMapHeight = 216;
+        private static int MiniMapWidth = (int)(4*216/3);
         private static int width = 1920;
         private static int height = 1080;
     }

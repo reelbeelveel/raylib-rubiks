@@ -70,7 +70,7 @@ namespace rbx
                         cube.Undo();
                     } else cube.Move(Keybinds.InputMvmt());
                     Raylib.BeginMode3D(RbxWindow.camera);
-
+                    cube.Draw(size);
                     Raylib.EndMode3D();
 
                     cube.DrawMiniMap();

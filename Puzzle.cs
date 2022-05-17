@@ -134,33 +134,33 @@ namespace rbx.Puzzle {
             TMycoord = TLycoord + FaceSize;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            //Raylib.DrawText($"ZOPP {this.ZOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"ZOPP {this.ZOpp.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
                             TMxcoord+BezlSize+(column * TileSize),
                             TMycoord+BezlSize+(row * TileSize),
                             size,size);
-                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.ZOpp().Tiles[row,column]]);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.ZOpp.Tiles[row,column]]);
                 }
             }
             TMxcoord = TLxcoord + FaceSize;
             TMycoord = TLycoord;
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
-            //Raylib.DrawText($"YOPP {this.YOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"YOPP {this.YOpp.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             for(int row = 0; row < Size; row++) {
                 for(int column = 0; column < Size; column++) {
                     Rectangle tileRect = new Rectangle(
                             TMxcoord+BezlSize+(column * TileSize),
                             TMycoord+BezlSize+(row * TileSize),
                             size,size);
-                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.YOpp().Tiles[row,column]]);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.YOpp.Tiles[row,column]]);
                 }
             }
             TMxcoord = TLxcoord + (2*FaceSize);
             TMycoord = TLycoord;
-            //Raylib.DrawText($"XOPP {this.XOpp().Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
+            //Raylib.DrawText($"XOPP {this.XOpp.Id}", (int)TMxcoord, (int)TMycoord, 10, SystemPalette.fg);
             bkdrop = new Rectangle(TMxcoord, TMycoord, FaceSize, FaceSize);
             Raylib.DrawRectangleRec(bkdrop, SystemPalette.cubeBg);
             for(int row = 0; row < Size; row++) {
@@ -169,7 +169,7 @@ namespace rbx.Puzzle {
                             TMxcoord+BezlSize+(column * TileSize),
                             TMycoord+BezlSize+(row * TileSize),
                             size,size);
-                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.XOpp().Tiles[row,column]]);
+                    Raylib.DrawRectangleRec(tileRect, SystemPalette.SideColor[this.XOpp.Tiles[row,column]]);
                 }
             }
 
@@ -208,42 +208,42 @@ namespace rbx.Puzzle {
                 case Mvmt.X:
                     {
                         Face tmp = this.Y;
-                        this.Y = this.ZOpp();
+                        this.Y = this.ZOpp;
                         this.Z = tmp;
                     } break;
 
                 case Mvmt.Xp:
                     {
                         Face tmp = this.Z;
-                        this.Z = this.YOpp();
+                        this.Z = this.YOpp;
                         this.Y = tmp;
                     } break;
 
                 case Mvmt.Y:
                     {
                         Face tmp = this.Z;
-                        this.Z = this.XOpp();
+                        this.Z = this.XOpp;
                         this.X = tmp;
                     } break;
 
                 case Mvmt.Yp:
                     {
                         Face tmp = this.X;
-                        this.X = this.ZOpp();
+                        this.X = this.ZOpp;
                         this.Z = tmp;
                     } break;
 
                 case Mvmt.Z:
                     {
                         Face tmp = this.X;
-                        this.X = this.YOpp();
+                        this.X = this.YOpp;
                         this.Y = tmp;
                     } break;
 
                 case Mvmt.Zp:
                     {
                         Face tmp = this.Y;
-                        this.Y = this.XOpp();
+                        this.Y = this.XOpp;
                         this.X = tmp;
                     } break;
 
@@ -268,7 +268,7 @@ namespace rbx.Puzzle {
                     Face.Orient();
         }
 
-        protected class Face {
+        public class Face {
             public Face(uint id, uint size, RubixCube cube) {
                 Id = id;
                 Size = size;
@@ -304,30 +304,30 @@ namespace rbx.Puzzle {
             public void Orient() {
                 uint wasTop = this.Top.Id;
                 if(this == Cube.Z) {
-                    this.Top = Cube.XOpp();
+                    this.Top = Cube.XOpp;
                     this.Bot = Cube.X;
                     this.Lft = Cube.Y;
-                    this.Rgt = Cube.YOpp();
-                } else if(this == Cube.ZOpp()) {
+                    this.Rgt = Cube.YOpp;
+                } else if(this == Cube.ZOpp) {
                     this.Top = Cube.X;
-                    this.Bot = Cube.XOpp();
+                    this.Bot = Cube.XOpp;
                     this.Lft = Cube.Y;
-                    this.Rgt = Cube.YOpp();
+                    this.Rgt = Cube.YOpp;
                 } else {
                     this.Top = Cube.Z;
-                    this.Bot = Cube.ZOpp();
+                    this.Bot = Cube.ZOpp;
                     if(this == Cube.X) {
                         this.Lft = Cube.Y;
-                        this.Rgt = Cube.YOpp();
+                        this.Rgt = Cube.YOpp;
                     } else if(this == Cube.Y) {
-                        this.Lft = Cube.XOpp();
+                        this.Lft = Cube.XOpp;
                         this.Rgt = Cube.X;
-                    } else if(this == Cube.XOpp()) {
-                        this.Lft = Cube.YOpp();
+                    } else if(this == Cube.XOpp) {
+                        this.Lft = Cube.YOpp;
                         this.Rgt = Cube.Y;
                     } else {
                         this.Lft = Cube.X;
-                        this.Rgt = Cube.XOpp();
+                        this.Rgt = Cube.XOpp;
                     }
                 }
 
@@ -499,31 +499,31 @@ namespace rbx.Puzzle {
 
             }
 
-            private Vector3 CenterVec() {
+            public Vector3 CenterVec() {
                 if(this == Cube.X)
                     return new Vector3(0f, 0f, 1f);
                 if(this == Cube.Z)
                     return new Vector3(0f, 1f, 0f);
                 if(this == Cube.Y)
                     return new Vector3(-1f, 0f, 0f);
-                if(this == Cube.ZOpp())
+                if(this == Cube.ZOpp)
                     return new Vector3(0f, -1f, 0f);
-                if(this == Cube.YOpp())
+                if(this == Cube.YOpp)
                     return new Vector3(1f, 0f, 0f);
-                if(this == Cube.XOpp())
+                if(this == Cube.XOpp)
                     return new Vector3(0f, 0f, -1f);
                 throw new Exception("Invalid face id.");
             }
-            private Vector3 TopLftVec() {
+            public Vector3 TopLftVec() {
                 return CenterVec() + Top.CenterVec() + Lft.CenterVec();
             }
-            private Vector3 BotRgtVec() {
+            public Vector3 BotRgtVec() {
                 return CenterVec() + Bot.CenterVec() + Rgt.CenterVec();
             }
-            private Vector3 TileSizeVec() {
+            public Vector3 TileSizeVec() {
                 Vector3 svec = (TopLftVec() - CenterVec()) * TileSize3D()
                     + (CenterVec() * 0.01f);
-                return (this == Cube.X || this == Cube.XOpp()) ? -1 * svec : svec;
+                return (this == Cube.X || this == Cube.XOpp) ? -1 * svec : svec;
 
             }
 
@@ -532,25 +532,25 @@ namespace rbx.Puzzle {
             }
 
             public RubixCube Cube;
-            public uint[,] Tiles;
+            public uint[,] Tiles { get; private set; }
             public uint Size;
             public Face? Top;
             public Face? Bot;
             public Face? Lft;
             public Face? Rgt;
             public Face? Opp;
-            public uint Id;
-
+            public uint Id { get; private set; }
+            public Vector3 Normal { get { return Vector3.Normalize(CenterVec()); } }
         }
 
         private List<Face> Faces = new List<Face>();
         private List<MoveObject> Moves = new List<MoveObject>();
-        private Face X;
-        private Face Y;
-        private Face Z;
-        private Face XOpp () => this.X.Opp;
-        private Face YOpp () => this.Y.Opp;
-        private Face ZOpp () => this.Z.Opp;
+        public Face X { get; private set; }
+        public Face Y { get; private set; }
+        public Face Z { get; private set; }
+        public Face XOpp { get { return this.X.Opp; } }
+        public Face YOpp { get { return this.Y.Opp; } }
+        public Face ZOpp { get { return this.Z.Opp; } }
         private Face MainFace () => this.X;
         private uint Size;
     }

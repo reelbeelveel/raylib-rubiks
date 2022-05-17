@@ -27,7 +27,7 @@ namespace rbx
             Raylib.SetExitKey(0);
             SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
-            RubixCube cube = new RubixCube();
+            RbxWindow.Cube = new RubixCube();
             float OrbitRadius = 5.0f;
             //cube.Shuffle();
 
@@ -48,13 +48,6 @@ namespace rbx
                 if(Keybinds.HelpKey()) {
                     HelpModule.ToggleHelp();
                 }
-                float MWMove = Raylib.GetMouseWheelMove();
-                if(Math.Abs(MWMove) > 0.1) {
-                    // TODO Log scrolling
-                    OrbitRadius -= MWMove;
-                    OrbitRadius = (OrbitRadius < ZOOM_MIN_LIMIT) ? ZOOM_MIN_LIMIT : OrbitRadius;
-                    OrbitRadius = (OrbitRadius > ZOOM_MAX_LIMIT) ? ZOOM_MAX_LIMIT : OrbitRadius;
-                }
                 if(HelpModule.HelpActive) {
                 } else {
                     Raylib.BeginDrawing();
@@ -63,26 +56,24 @@ namespace rbx
 
                     uint? NumKey = Keybinds.NumKey();
                     if(NumKey != null) {
-                        cube = new RubixCube((uint)((NumKey == 0) ? 10 : NumKey));
+                        RbxWindow.Cube = new RubixCube((uint)((NumKey == 0) ? 10 : NumKey));
                     }
                     if(Keybinds.ShuffleKey()) {
-                        if(!cube.Solved())
-                            cube = new RubixCube();
-                        cube.Shuffle();
+                        if(!RbxWindow.Cube.Solved())
+                            RbxWindow.Cube = new RubixCube();
+                        RbxWindow.Cube.Shuffle();
                     }
                     if(Keybinds.UndoKey()) {
-                        cube.Undo();
-                    } else cube.Move(Keybinds.InputMvmt());
-                    RbxWindow.SetOrbitRadius(OrbitRadius);
-                    UpdateCamera(ref RbxWindow.camera);
+                        RbxWindow.Cube.Undo();
+                    } else RbxWindow.Cube.Move(Keybinds.InputMvmt());
 
-                    Raylib.BeginMode3D(RbxWindow.camera);
+                    RbxWindow.UpdateCam();
 
-                    cube.Draw3D();
+                    RbxWindow.Cube.Draw3D();
 
                     Raylib.EndMode3D();
 
-                    cube.DrawMiniMap();
+                    RbxWindow.Cube.DrawMiniMap();
 
                     Raylib.EndDrawing();
                 }

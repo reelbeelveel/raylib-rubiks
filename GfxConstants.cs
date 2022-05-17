@@ -6,5 +6,6 @@ namespace rbx {
         public static readonly float BEZEL_RATIO_MM = 0.15F;
         public static readonly float ZOOM_MIN_LIMIT = 1.0F;
         public static readonly float ZOOM_MAX_LIMIT = 100000.0F;
+        public static readonly float PAN_SPEED      = 0.1F;
     }
 }

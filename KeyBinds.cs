@@ -3,6 +3,7 @@ using System;
 using System.Numerics;
 using static Raylib_cs.Raylib;
 using static Raylib_cs.KeyboardKey;
+using static Raylib_cs.MouseButton;
 using rbx.Puzzle;
 
 namespace rbx{
@@ -20,7 +21,7 @@ namespace rbx{
             return IsKeyPressed(KEY_F11);
         }
         public static bool UndoKey() {
-            return IsKeyPressed(KEY_Z) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
+            return IsKeyDown(KEY_Z) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
         }
         public static bool ShuffleKey() {
             return IsKeyPressed(KEY_SPACE);
@@ -85,6 +86,12 @@ namespace rbx{
                 }
             }
             return null;
+        }
+        public static Vector3 PanVector() {
+            if(IsMouseButtonUp(MOUSE_LEFT_BUTTON) || !IsCursorOnScreen())
+                return Vector3.Zero;
+            Vector2 mouseDelta = GetMouseDelta();
+            return new Vector3(-1*mouseDelta.X, -1*mouseDelta.Y, 0F);
         }
         public static Vector2 InputVector() {
             Vector2 vec = new Vector2(0, 0);

@@ -23,6 +23,8 @@ namespace rbx{
         public static bool UndoKey() {
             return IsKeyDown(KEY_Z) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL));
         }
+        public static bool CenterKey() => IsKeyPressed(KEY_ESCAPE);
+        public static bool PauseKey() => IsKeyDown(KEY_ENTER);
         public static bool ShuffleKey() {
             return IsKeyPressed(KEY_SPACE);
         }
@@ -31,6 +33,10 @@ namespace rbx{
                 if(Any_NumPressed(i)) return i;
             return null;
         }
+        public static bool UpArrow() => IsKeyPressed(KEY_UP);
+        public static bool DownArrow() => IsKeyPressed(KEY_DOWN);
+        public static bool LeftArrow() => IsKeyPressed(KEY_LEFT);
+        public static bool RightArrow() => IsKeyPressed(KEY_RIGHT);
 
         public static bool Alt_Mod(KeyboardKey key)
             => IsKeyPressed(key) && Any_Alt();

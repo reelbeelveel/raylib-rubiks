@@ -75,6 +75,8 @@ namespace rbx
 
                     RbxWindow.Cube.DrawMiniMap();
 
+                    RbxWindow.DrawCoords();
+
                     Raylib.EndDrawing();
                 }
             }
